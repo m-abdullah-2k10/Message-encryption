@@ -504,24 +504,18 @@
                       class="w-full px-4 py-4 bg-slate-900/70 border-2 border-accent-purple rounded-lg text-gray-100 font-body text-base break-words min-h-[100px] max-h-[300px] overflow-y-auto"
                       style="animation: pulse-border-purple 2s ease-in-out infinite;"
                     ></div>
-                    
-                    <!-- Copy Button -->
-                    <button
-                      type="button"
-                      id="copyDecryptBtn"
-                      class="absolute top-2 right-2 px-4 py-2 bg-accent-purple text-white font-semibold text-sm rounded-md hover:bg-purple-600 transition-all duration-200 btn-hover flex items-center gap-2"
-                    >
-                      <span id="copyDecryptIcon">📋</span>
-                      <span id="copyDecryptText">Copy</span>
-                    </button>
                   </div>
+                  
+                  <!-- Copy Button (Moved Outside) -->
+                  <button
+                    type="button"
+                    id="copyDecryptBtn"
+                    class="w-full mt-3 py-3 bg-accent-purple text-white font-semibold text-lg rounded-lg hover:bg-purple-600 transition-all duration-200 btn-hover flex items-center justify-center gap-2"
+                  >
+                    <span id="copyDecryptIcon">📋</span>
+                    <span id="copyDecryptText">Copy Message</span>
+                  </button>
 
-                  <!-- Success Message -->
-                  <div class="mt-4 p-4 bg-purple-900/20 border border-accent-purple/30 rounded-lg">
-                    <p class="text-sm text-gray-300">
-                      <strong class="text-accent-purple">🎉 Success!</strong> Your message has been decrypted.
-                    </p>
-                  </div>
 
                   <!-- Reset Button -->
                   <button
@@ -590,6 +584,45 @@
                   <li>Never paste the password in the same chat as the encrypted message.</li>
                   <li>Use a unique password for each conversation.</li>
                 </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 4: Lost Password -->
+          <div class="border border-slate-700 rounded-lg bg-slate-800/30 overflow-hidden backdrop-blur-sm">
+            <button class="accordion-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors duration-200">
+              <span class="font-semibold text-gray-200">🤕 What if I forget my password?</span>
+              <span class="chevron text-gray-400 transition-transform duration-300">▼</span>
+            </button>
+            <div class="accordion-content bg-slate-900/30">
+              <div class="p-6 text-gray-400 text-sm leading-relaxed border-t border-slate-700/50">
+                <p>Unfortunately, your message will be lost forever. We do not store your passwords or messages on any server, so there is no "forgot password" feature. This ensures maximum security—only the person with the password can read the message.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 5: Compatibility -->
+          <div class="border border-slate-700 rounded-lg bg-slate-800/30 overflow-hidden backdrop-blur-sm">
+            <button class="accordion-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors duration-200">
+              <span class="font-semibold text-gray-200">📱 Where can I use this?</span>
+              <span class="chevron text-gray-400 transition-transform duration-300">▼</span>
+            </button>
+            <div class="accordion-content bg-slate-900/30">
+              <div class="p-6 text-gray-400 text-sm leading-relaxed border-t border-slate-700/50">
+                <p>Everywhere! Emoji Spy works on any device with a web browser (iPhone, Android, PC, Mac). You can paste the encrypted emoji messages into WhatsApp, Telegram, Signal, iMessage, Messenger, Discord, or even email.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ Item 6: Randomization -->
+          <div class="border border-slate-700 rounded-lg bg-slate-800/30 overflow-hidden backdrop-blur-sm">
+            <button class="accordion-header w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors duration-200">
+              <span class="font-semibold text-gray-200">🎲 Why does the output change every time?</span>
+              <span class="chevron text-gray-400 transition-transform duration-300">▼</span>
+            </button>
+            <div class="accordion-content bg-slate-900/30">
+              <div class="p-6 text-gray-400 text-sm leading-relaxed border-t border-slate-700/50">
+                <p>This is a security feature! Even if you encrypt the same message with the same password multiple times, the emoji result will be different each time. We use a random "Salt" and "Initialization Vector" (IV) for every encryption to prevent attackers from recognizing patterns.</p>
               </div>
             </div>
           </div>
