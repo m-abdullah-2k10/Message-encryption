@@ -355,7 +355,7 @@
                   <div class="relative">
                     <div
                       id="encryptedText"
-                      class="w-full pl-4 pr-32 py-4 bg-slate-900/70 border-2 border-accent-green rounded-lg text-gray-100 font-mono text-sm break-all min-h-[100px] max-h-[200px] overflow-y-auto pulse-border"
+                      class="w-full pl-4 pr-44 py-4 bg-slate-900/70 border-2 border-accent-green rounded-lg text-gray-100 font-mono text-sm break-all min-h-[100px] max-h-[200px] overflow-y-auto pulse-border"
                     ></div>
                     
                     <!-- Action Buttons -->
@@ -923,6 +923,7 @@
       const encryptOutput = document.getElementById('encryptOutput');
       const encryptedText = document.getElementById('encryptedText');
       const copyEncryptBtn = document.getElementById('copyEncryptBtn');
+      const shareWhatsAppBtn = document.getElementById('shareWhatsAppBtn');
       const copyIcon = document.getElementById('copyIcon');
       const copyText = document.getElementById('copyText');
       const resetEncryptBtn = document.getElementById('resetEncryptBtn');
@@ -1084,6 +1085,15 @@
             copyText, 
             'bg-green-500'
           );
+        });
+      }
+
+      if (shareWhatsAppBtn) {
+        shareWhatsAppBtn.addEventListener('click', () => {
+          const text = encryptedText.textContent;
+          if (text) {
+             shareOnWhatsApp(text);
+          }
         });
       }
       
