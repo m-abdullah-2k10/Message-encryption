@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Character Encoding & Viewport -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <title>Emoji Spy - Free WhatsApp Text Encryptor</title>
+    <meta
+      name="description"
+      content="Securely encrypt your messages into emojis using AES-256. Private, free, and works on any device."
+    />
+    <meta
+      name="keywords"
+      content="emoji encryption, whatsapp encrypt, text to emoji, AES-256, private messaging"
+    />
+
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta
+      property="og:title"
+      content="Emoji Spy - Send Hidden Messages on WhatsApp"
+    />
+    <meta
+      property="og:description"
+      content="Encrypt your secret messages into emojis. Free, private, and secure."
+    />
+    <meta property="og:type" content="website" />
+
+    <!-- Emoji Favicon (Inline SVG) -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🕵️</text></svg>"
+    />
+
+    <!-- Google Fonts: Inter (body) + JetBrains Mono (code/hacker aesthetic) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CDN Imports -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'primary': '#0f172a',        // slate-900 - dark background
+              'accent-green': '#39FF14',   // neon green
+              'accent-purple': '#a855f7',  // purple glow
+            },
+            fontFamily: {
+              'body': ['Inter', 'sans-serif'],
+              'mono': ['JetBrains Mono', 'monospace'],
+            },
+          },
+        },
+      };
+    </script>
+    
+    <!-- Custom Styles & Animations -->
+    <style>
+      /* Apply font families globally */
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      
+      /* Neon Glow Animation for Buttons */
+      @keyframes neon-glow {
+        0%, 100% {
+          box-shadow: 0 0 5px #39FF14, 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 40px #39FF14;
+        }
+        50% {
+          box-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 30px #39FF14, 0 0 60px #39FF14;
+        }
+      }
+      
+      .neon-glow-green {
+        animation: neon-glow 2s ease-in-out infinite;
+      }
+      
+      /* Purple Glow Animation */
+      @keyframes purple-glow {
+        0%, 100% {
+          box-shadow: 0 0 5px #a855f7, 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 40px #a855f7;
+        }
+        50% {
+          box-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7, 0 0 30px #a855f7, 0 0 60px #a855f7;
+        }
+      }
+      
+      .neon-glow-purple {
+        animation: purple-glow 2s ease-in-out infinite;
+      }
+
+      /* Shake Animation for Errors */
+      @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+      }
+      .animate-shake {
+          animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+      }
+      
+      /* Smooth Tab Transition */
+      .tab-transition {
+        transition: all 0.3s ease;
+      }
+      
+      /* Pulsing Border Animation for Output Box */
+      @keyframes pulse-border {
+        0%, 100% {
+          border-color: #39FF14;
+          box-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+        50% {
+          border-color: #2dd40f;
+          box-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
+        }
+      }
+      
+      .pulse-border {
+        animation: pulse-border 2s ease-in-out infinite;
+      }
+      
+      /* Pulsing Border Animation for Decrypt Output Box (Purple) */
+      @keyframes pulse-border-purple {
+        0%, 100% {
+          border-color: #a855f7;
+          box-shadow: 0 0 5px rgba(168, 85, 247, 0.5);
+        }
+        50% {
+          border-color: #9333ea;
+          box-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+        }
+      }
+      
+      /* Loading Spinner Animation */
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      
+      .spinner {
+        animation: spin 1s linear infinite;
+      }
+      
+      /* Custom Scrollbar for Dark Mode */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #1e293b;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #475569;
+        border-radius: 5px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+      
+      /* Smooth Fade-in Animation */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      
+      .fade-in {
+        animation: fadeIn 0.4s ease-out;
+      }
+      
+      /* Accordion Smooth Height Transition */
+      .accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      
+      .accordion-content.open {
+        max-height: 500px;
+        transition: max-height 0.5s ease-in;
+      }
+      
+      /* Chevron Rotation for Accordion */
+      .chevron {
+        transition: transform 0.3s ease;
+      }
+      
+      .chevron.rotate {
+        transform: rotate(180deg);
+      }
+      
+      /* Gradient Text Effect */
+      .gradient-text {
+        background: linear-gradient(135deg, #39FF14 0%, #2dd40f 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      /* Button Hover Effects */
+      .btn-hover {
+        transition: all 0.2s ease;
+      }
+      
+      .btn-hover:hover {
+        transform: translateY(-2px);
+      }
+      
+      .btn-hover:active {
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body class="bg-primary text-gray-100 min-h-screen">
+    <!-- Header Section -->
+    <header class="container mx-auto px-4 py-8 text-center">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 gradient-text font-mono">
+        🕵️ Emoji Spy
+      </h1>
+      <p class="text-gray-400 text-base md:text-lg font-light">
+        Send Hidden Messages on WhatsApp
+      </p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 pb-12">
+      <!-- Tab Switcher Container -->
+      <div class="max-w-3xl mx-auto">
+        <!-- Tab Buttons -->
+        <div class="flex gap-4 mb-8 bg-slate-800/50 p-2 rounded-xl backdrop-blur-sm border border-slate-700">
+          <button
+            id="encryptTab"
+            class="tab-btn flex-1 py-3 px-6 rounded-lg font-semibold text-base md:text-lg transition-all duration-300 btn-hover"
+            data-tab="encrypt"
+          >
+            🔒 Encrypt
+          </button>
+          <button
+            id="decryptTab"
+            class="tab-btn flex-1 py-3 px-6 rounded-lg font-semibold text-base md:text-lg transition-all duration-300 btn-hover"
+            data-tab="decrypt"
+          >
+            🔓 Decrypt
+          </button>
+        </div>
+
+        <!-- Tab Content Containers -->
+        <div id="tabContent" class="relative">
+          <!-- Encrypt Tab Content -->
+          <div id="encryptContent" class="tab-content fade-in">
+            <div class="bg-slate-800/30 border border-slate-700 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+              <h2 class="text-2xl font-bold mb-4 text-accent-green">
+                🔒 Encrypt Your Message
+              </h2>
+              <p class="text-gray-400 mb-6">
+                Transform your secret text into emojis that only your recipient can decode.
+              </p>
+              <!-- Encrypt Form -->
+              <form id="encryptForm" class="space-y-6">
+                <!-- Message Input -->
+                <div>
+                  <label for="messageInput" class="block text-sm font-semibold text-gray-300 mb-2">
+                    Your Secret Message
+                  </label>
+                  <textarea
+                    id="messageInput"
+                    rows="4"
+                    placeholder="Type your secret message here..."
+                    class="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-accent-green focus:ring-2 focus:ring-accent-green/20 transition-all duration-200 resize-none font-body"
+                    required
+                  ></textarea>
+                  <div class="flex justify-between mt-2">
+                    <p id="encryptMessageError" class="text-xs text-red-400 hidden font-semibold">⚠️ Please enter a message to encrypt</p>
+                    <p id="charCount" class="text-xs text-gray-500 ml-auto">0 characters</p>
+                  </div>
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                  <label for="passwordInput" class="block text-sm font-semibold text-gray-300 mb-2">
+                    Encryption Password
+                  </label>
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="passwordInput"
+                      placeholder="Enter a strong password..."
+                      class="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-accent-green focus:ring-2 focus:ring-accent-green/20 transition-all duration-200"
+                      required
+                      minlength="4"
+                    />
+                    <button
+                      type="button"
+                      id="togglePassword"
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-accent-green transition-colors duration-200"
+                      aria-label="Toggle password visibility"
+                    >
+                      <span id="eyeIcon">👁️</span>
+                    </button>
+                  </div>
+                  <p id="encryptPasswordError" class="text-xs text-red-400 mt-2 hidden font-semibold">⚠️ Password must be at least 4 characters long</p>
+                  <p class="text-xs text-gray-500 mt-2">
+                    💡 Tip: Use a strong password that you can share with your recipient
+                  </p>
+                </div>
+
+                <!-- General Error Message -->
+                <div id="encryptGeneralError" class="hidden p-3 bg-red-900/20 border border-red-500/50 rounded-lg text-red-200 text-sm flex items-center gap-2">
+                    <span>❌</span>
+                    <span id="encryptGeneralErrorText">Encryption failed</span>
+                </div>
+
+                <!-- Encrypt Button -->
+                <button
+                  type="submit"
+                  id="encryptBtn"
+                  class="w-full py-4 bg-accent-green text-slate-900 font-bold text-lg rounded-lg neon-glow-green btn-hover transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <span>🔒</span>
+                  <span>Encrypt Message</span>
+                </button>
+              </form>
+
+              <!-- Output Section (Hidden by default) -->
+              <div id="encryptOutput" class="mt-8 hidden">
+                <div class="border-t border-slate-700 pt-6">
+                  <h3 class="text-lg font-semibold text-accent-green mb-3 flex items-center gap-2">
+                    <span>✅</span>
+                    <span>Encrypted Message</span>
+                  </h3>
+                  
+                  <!-- Encrypted Output Display -->
+                  <div class="relative">
+                    <div
+                      id="encryptedText"
+                      class="w-full pl-4 pr-32 py-4 bg-slate-900/70 border-2 border-accent-green rounded-lg text-gray-100 font-mono text-sm break-all min-h-[100px] max-h-[200px] overflow-y-auto pulse-border"
+                    ></div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="absolute top-2 right-2 flex gap-2">
+                      <button
+                        type="button"
+                        id="shareWhatsAppBtn"
+                        class="px-3 py-2 bg-green-600 text-white font-semibold text-xs md:text-sm rounded-md hover:bg-green-500 transition-all duration-200 btn-hover flex items-center gap-1"
+                        title="Share on WhatsApp"
+                      >
+                        <span>📱</span>
+                        <span class="hidden md:inline">Share</span>
+                      </button>
+                      <button
+                        type="button"
+                        id="copyEncryptBtn"
+                        class="px-3 py-2 bg-accent-green text-slate-900 font-semibold text-xs md:text-sm rounded-md hover:bg-green-400 transition-all duration-200 btn-hover flex items-center gap-1"
+                        title="Copy to Clipboard"
+                      >
+                        <span id="copyIcon">📋</span>
+                        <span id="copyText" class="hidden md:inline">Copy</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Instructions -->
+                  <div class="mt-4 p-4 bg-slate-900/50 border border-slate-600 rounded-lg">
+                    <p class="text-sm text-gray-300 mb-2">
+                      <strong class="text-accent-green">📤 How to send:</strong>
+                    </p>
+                    <ol class="text-sm text-gray-400 space-y-1 ml-4 list-decimal">
+                      <li>Copy the encrypted emoji message above</li>
+                      <li>Send it to your recipient via WhatsApp or any messaging app</li>
+                      <li>Share the password separately (voice call, in person, etc.)</li>
+                      <li>Your recipient can decrypt it using the same password</li>
+                    </ol>
+                  </div>
+
+                  <!-- Reset Button -->
+                  <button
+                    type="button"
+                    id="resetEncryptBtn"
+                    class="w-full mt-4 py-3 bg-slate-700 text-gray-300 font-semibold rounded-lg hover:bg-slate-600 transition-all duration-200 btn-hover"
+                  >
+                    🔄 Encrypt Another Message
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decrypt Tab Content -->
+          <div id="decryptContent" class="tab-content hidden">
+            <div class="bg-slate-800/30 border border-slate-700 rounded-2xl p-6 md:p-8 backdrop-blur-sm">
+              <h2 class="text-2xl font-bold mb-4 text-accent-purple">
+                🔓 Decrypt Your Message
+              </h2>
+              <p class="text-gray-400 mb-6">
+                Paste the emoji message and enter the password to reveal the hidden text.
+              </p>
+              <!-- Decrypt Form -->
+              <form id="decryptForm" class="space-y-6">
+                <!-- Emoji Message Input -->
+                <div>
+                  <label for="emojiInput" class="block text-sm font-semibold text-gray-300 mb-2">
+                    Encrypted Emoji Message
+                  </label>
+                  <textarea
+                    id="emojiInput"
+                    rows="4"
+                    placeholder="Paste the encrypted emoji message here..."
+                    class="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-accent-purple focus:ring-2 focus:ring-accent-purple/20 transition-all duration-200 resize-none font-mono text-sm"
+                    required
+                  ></textarea>
+                  <p id="decryptEmojiError" class="text-xs text-red-400 mt-2 hidden font-semibold">⚠️ Please paste the encrypted emoji message</p>
+                  <p class="text-xs text-gray-500 mt-2">
+                    📥 Paste the emoji message you received
+                  </p>
+                </div>
+
+                <!-- Password Input -->
+                <div>
+                  <label for="decryptPasswordInput" class="block text-sm font-semibold text-gray-300 mb-2">
+                    Decryption Password
+                  </label>
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="decryptPasswordInput"
+                      placeholder="Enter the password..."
+                      class="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:border-accent-purple focus:ring-2 focus:ring-accent-purple/20 transition-all duration-200 font-mono"
+                      required
+                      minlength="4"
+                    />
+                    <button
+                      type="button"
+                      id="toggleDecryptPassword"
+                      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-accent-purple transition-colors duration-200"
+                      aria-label="Toggle password visibility"
+                    >
+                      <span id="decryptEyeIcon">👁️</span>
+                    </button>
+                  </div>
+                  <p id="decryptPasswordError" class="text-xs text-red-400 mt-2 hidden font-semibold">⚠️ Please enter the decryption password</p>
+                  <p class="text-xs text-gray-500 mt-2">
+                    🔑 Enter the same password used for encryption
+                  </p>
+                </div>
+
+                <!-- General Error Message -->
+                <div id="decryptGeneralError" class="hidden p-3 bg-red-900/20 border border-red-500/50 rounded-lg text-red-200 text-sm flex items-center gap-2">
+                    <span>❌</span>
+                    <span id="decryptGeneralErrorText">Decryption failed</span>
+                </div>
+
+                <!-- Decrypt Button -->
+                <button
+                  type="submit"
+                  id="decryptBtn"
+                  class="w-full py-4 bg-accent-purple text-white font-bold text-lg rounded-lg neon-glow-purple btn-hover transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <span>🔓</span>
+                  <span>Decrypt Message</span>
+                </button>
+              </form>
+
+              <!-- Decrypted Output Section (Hidden by default) -->
+              <div id="decryptOutput" class="mt-8 hidden">
+                <div class="border-t border-slate-700 pt-6">
+                  <h3 class="text-lg font-semibold text-accent-purple mb-3 flex items-center gap-2">
+                    <span>✅</span>
+                    <span>Decrypted Message</span>
+                  </h3>
+                  
+                  <!-- Decrypted Output Display -->
+                  <div class="relative">
+                    <div
+                      id="decryptedText"
+                      class="w-full px-4 py-4 bg-slate-900/70 border-2 border-accent-purple rounded-lg text-gray-100 font-body text-base break-words min-h-[100px] max-h-[300px] overflow-y-auto"
+                      style="animation: pulse-border-purple 2s ease-in-out infinite;"
+                    ></div>
+                    
+                    <!-- Copy Button -->
+                    <button
+                      type="button"
+                      id="copyDecryptBtn"
+                      class="absolute top-2 right-2 px-4 py-2 bg-accent-purple text-white font-semibold text-sm rounded-md hover:bg-purple-600 transition-all duration-200 btn-hover flex items-center gap-2"
+                    >
+                      <span id="copyDecryptIcon">📋</span>
+                      <span id="copyDecryptText">Copy</span>
+                    </button>
+                  </div>
+
+                  <!-- Success Message -->
+                  <div class="mt-4 p-4 bg-purple-900/20 border border-accent-purple/30 rounded-lg">
+                    <p class="text-sm text-gray-300">
+                      <strong class="text-accent-purple">🎉 Success!</strong> Your message has been decrypted.
+                    </p>
+                  </div>
+
+                  <!-- Reset Button -->
+                  <button
+                    type="button"
+                    id="resetDecryptBtn"
+                    class="w-full mt-4 py-3 bg-slate-700 text-gray-300 font-semibold rounded-lg hover:bg-slate-600 transition-all duration-200 btn-hover"
+                  >
+                    🔄 Decrypt Another Message
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Tab Switcher JavaScript -->
+    <script>
+      /**
+       * Tab Switcher Functionality
+       * Handles switching between Encrypt and Decrypt tabs with smooth animations
+       */
+      
+      // Get all tab buttons and content containers
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
+      
+      // Active tab state
+      let activeTab = 'encrypt';
+      
+      /**
+       * Initialize the tab switcher
+       * Sets up the default active tab (Encrypt)
+       */
+      function initializeTabs() {
+        setActiveTab('encrypt');
+      }
+      
+      /**
+       * Set the active tab
+       * @param {string} tabName - The name of the tab to activate ('encrypt' or 'decrypt')
+       */
+      function setActiveTab(tabName) {
+        activeTab = tabName;
+        
+        // Update button styles
+        tabButtons.forEach(button => {
+          const isActive = button.dataset.tab === tabName;
+          
+          if (isActive) {
+            // Active tab styling
+            button.classList.add('bg-accent-green', 'text-slate-900', 'neon-glow-green');
+            button.classList.remove('bg-transparent', 'text-gray-400', 'hover:bg-slate-700');
+          } else {
+            // Inactive tab styling
+            button.classList.remove('bg-accent-green', 'text-slate-900', 'neon-glow-green');
+            button.classList.add('bg-transparent', 'text-gray-400', 'hover:bg-slate-700');
+          }
+        });
+        
+        // Update content visibility with fade animation
+        tabContents.forEach(content => {
+          const contentId = content.id.replace('Content', '');
+          
+          if (contentId === tabName) {
+            // Show active content
+            content.classList.remove('hidden');
+            // Trigger reflow to restart animation
+            void content.offsetWidth;
+            content.classList.add('fade-in');
+          } else {
+            // Hide inactive content
+            content.classList.add('hidden');
+            content.classList.remove('fade-in');
+          }
+        });
+      }
+      
+      /**
+       * Handle tab button clicks
+       */
+      tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const tabName = button.dataset.tab;
+          setActiveTab(tabName);
+        });
+      });
+      
+      
+      // Initialize tabs on page load
+      document.addEventListener('DOMContentLoaded', initializeTabs);
+    </script>
+
+    <!-- Shared Encryption Logic -->
+    <script>
+      /**
+       * Core Encryption & Decryption Logic
+       * Shared across the application
+       */
+
+      /**
+       * EMOJI MAP - Base-65 Encoding System
+       * ===================================
+       * This emoji set contains exactly 65 unique emojis used for encoding.
+       * Each emoji maps directly to a Base64 character.
+       */
+      const EMOJI_MAP = [
+        // Smileys & Emotion (20 emojis) - Indices 0-19
+        '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃',
+        '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙',
+        
+        // Expressive Faces (15 emojis) - Indices 20-34
+        '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔',
+        '🤐', '🤨', '😐', '😑', '😶',
+        
+        // Negative Emotions (10 emojis) - Indices 35-44
+        '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴',
+        
+        // Hearts & Symbols (10 emojis) - Indices 45-54
+        '💖', '🧡', '💛', '💚', '💙', '💜', '🤎', '🖤', '🤍', '💯',
+        
+        // Hand Gestures (10 emojis) - Indices 55-64
+        '👋', '🖐', '✋', '👌', '🤘', '🤞', '🤟', '👍', '👎', '👊'
+      ];
+      
+      const BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      
+      // Verify emoji map has exactly 65 emojis
+      if (EMOJI_MAP.length !== 65) {
+        console.error(`EMOJI_MAP should have 65 emojis, but has ${EMOJI_MAP.length}`);
+      }
+
+      // Pre-compute reverse map for O(1) decryption lookup
+      const EMOJI_TO_INDEX = new Map();
+      EMOJI_MAP.forEach((emoji, index) => {
+        EMOJI_TO_INDEX.set(emoji, index);
+      });
+
+      /**
+       * Convert Base64 text to emoji encoding
+       * Step 10: Helper Function
+       */
+      function base64ToEmojis(base64String) {
+        if (!base64String || base64String.length === 0) return '';
+        let result = '';
+        for (let i = 0; i < base64String.length; i++) {
+          const char = base64String[i];
+          const index = BASE64_CHARS.indexOf(char);
+          if (index !== -1) {
+            result += EMOJI_MAP[index];
+          } else {
+            console.warn('Non-Base64 character found:', char);
+            result += char;
+          }
+        }
+        return result;
+      }
+
+      /**
+       * Convert emoji encoding back to Base64 text
+       * Step 10: Helper Function
+       */
+      function emojisToBase64(emojiString) {
+        if (!emojiString || emojiString.length === 0) return '';
+        
+        let result = '';
+        let emojis;
+        
+        // Use Intl.Segmenter for robust grapheme cluster splitting (handling multi-codepoint emojis)
+        if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+            const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+            emojis = Array.from(segmenter.segment(emojiString)).map(segment => segment.segment);
+        } else {
+            // Fallback for older browsers (might fail on sophisticated emojis)
+            emojis = Array.from(emojiString);
+        }
+        
+        for (const emoji of emojis) {
+          // Skip whitespace/newlines that might come from copy-pasting
+          if (!emoji.trim()) continue;
+          
+          const index = EMOJI_TO_INDEX.get(emoji);
+          if (index !== undefined && index < BASE64_CHARS.length) {
+            result += BASE64_CHARS[index];
+          }
+        }
+        return result;
+      }
+
+      /**
+       * Encrypt the message using AES-256 with PBKDF2, Salt, and IV
+       * Step 8: Encryption Logic
+       */
+      function encryptToEmojis(message, password) {
+        try {
+          // 1. Generate random Salt (128-bit) and IV (128-bit)
+          const salt = CryptoJS.lib.WordArray.random(128/8);
+          const iv = CryptoJS.lib.WordArray.random(128/8);
+
+          // 2. Derive key from password + salt using PBKDF2
+          const key = CryptoJS.PBKDF2(password, salt, {
+            keySize: 256 / 32,
+            iterations: 10000,
+          });
+
+          // 3. Encrypt with AES-256-CBC
+          const encrypted = CryptoJS.AES.encrypt(message, key, { 
+            iv: iv,
+            padding: CryptoJS.pad.Pkcs7,
+            mode: CryptoJS.mode.CBC
+          });
+
+          // 4. Combine: salt + iv + ciphertext -> single Base64 string
+          // We need to carefully concat the WordArrays
+          const combined = salt.clone().concat(iv).concat(encrypted.ciphertext);
+          const base64 = CryptoJS.enc.Base64.stringify(combined);
+
+          // 5. Replace each Base64 char with its emoji
+          return base64ToEmojis(base64);
+        } catch (error) {
+          console.error('Encryption error:', error);
+          throw new Error('Failed to encrypt message');
+        }
+      }
+
+      /**
+       * Decrypt the emoji message using AES-256 with PBKDF2, Salt, and IV
+       * Step 9: Decryption Logic
+       */
+      function decryptFromEmojis(emojiString, password) {
+        try {
+          // 1. Convert emojis back to Base64
+          const base64 = emojisToBase64(emojiString);
+
+          // 2. Parse combined binary
+          const combined = CryptoJS.enc.Base64.parse(base64);
+
+          // 3. Extract salt (first 16 bytes), IV (next 16 bytes), ciphertext (rest)
+          // WordArray stores words (4 bytes). 16 bytes = 4 words.
+          const salt = CryptoJS.lib.WordArray.create(combined.words.slice(0, 4));
+          const iv = CryptoJS.lib.WordArray.create(combined.words.slice(4, 8));
+          const ciphertext = CryptoJS.lib.WordArray.create(combined.words.slice(8));
+
+          // 4. Derive same key from password + extracted salt
+          const key = CryptoJS.PBKDF2(password, salt, {
+            keySize: 256 / 32,
+            iterations: 10000,
+          });
+
+          // 5. Decrypt
+          const decrypted = CryptoJS.AES.decrypt(
+            { ciphertext: ciphertext }, 
+            key, 
+            { 
+              iv: iv,
+              padding: CryptoJS.pad.Pkcs7,
+              mode: CryptoJS.mode.CBC
+            }
+          );
+
+          // 6. Return UTF-8 string or throw error
+          const result = decrypted.toString(CryptoJS.enc.Utf8);
+          if (!result) throw new Error("Decryption Failed");
+          return result;
+        } catch (error) {
+          console.error('Decryption error:', error);
+          throw new Error('Decryption failed');
+        }
+      }
+
+      /**
+       * UI HELPER FUNCTIONS
+       */
+
+      /**
+       * Toggle password field visibility
+       */
+      function uiTogglePassword(inputElement, iconElement) {
+        const isPassword = inputElement.type === 'password';
+        inputElement.type = isPassword ? 'text' : 'password';
+        iconElement.textContent = isPassword ? '🙈' : '👁️';
+      }
+
+      /**
+       * Copy text to clipboard with UI feedback
+       */
+      async function uiCopyToClipboard(text, buttonElement, iconElement, textElement, successClass = 'bg-green-500') {
+        try {
+          await navigator.clipboard.writeText(text);
+          triggerCopyFeedback(buttonElement, iconElement, textElement, successClass);
+        } catch (error) {
+          // Fallback for older browsers or restricted contexts
+          fallbackCopyTextToClipboard(text, buttonElement, iconElement, textElement, successClass);
+        }
+      }
+
+      /**
+       * Share emoji string on WhatsApp
+       */
+      function shareOnWhatsApp(emojiString) {
+        if (!emojiString) return;
+        const encoded = encodeURIComponent(emojiString);
+        // Uses the universal WhatsApp URL scheme that works on both mobile and desktop
+        window.open(`https://wa.me/?text=${encoded}`, '_blank');
+      }
+
+      /**
+       * Fallback copy mechanism using execCommand
+       */
+      function fallbackCopyTextToClipboard(text, buttonElement, iconElement, textElement, successClass) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.select();
+        
+        try {
+          const successful = document.execCommand('copy');
+          if (successful) {
+            triggerCopyFeedback(buttonElement, iconElement, textElement, successClass);
+          } else {
+             alert('❌ Failed to copy. Please copy manually.');
+          }
+        } catch (err) {
+          alert('❌ Failed to copy. Please copy manually.');
+        }
+        document.body.removeChild(textArea);
+      }
+
+      /**
+       * Trigger visual feedback for copy action
+       */
+      function triggerCopyFeedback(buttonElement, iconElement, textElement, successClass) {
+        const originalIcon = iconElement.textContent;
+        const originalText = textElement ? textElement.textContent : '';
+        
+        iconElement.textContent = '✅';
+        if (textElement) textElement.textContent = 'Copied!';
+        buttonElement.classList.add(successClass);
+        
+        setTimeout(() => {
+          iconElement.textContent = originalIcon;
+          if (textElement) textElement.textContent = originalText;
+          buttonElement.classList.remove(successClass);
+        }, 2000);
+      }
+      
+      /**
+       * Helper: Show inline error
+       */
+      function showInlineError(elementId, show = true) {
+        const el = document.getElementById(elementId);
+        if (el) {
+          if (show) {
+             el.classList.remove('hidden');
+             el.classList.add('animate-shake'); 
+             // remove shake after animation
+             setTimeout(() => el.classList.remove('animate-shake'), 500);
+          } else {
+             el.classList.add('hidden');
+          }
+        }
+      }
+
+      /**
+       * Helper: Set general error text
+       */
+      function setGeneralError(containerId, textId, message) {
+        const container = document.getElementById(containerId);
+        const textToSet = document.getElementById(textId);
+        if (container && textToSet) {
+           textToSet.textContent = message;
+           container.classList.remove('hidden');
+        }
+      }
+      
+      /**
+       * Helper: Clear general error
+       */
+      function clearGeneralError(containerId) {
+        const container = document.getElementById(containerId);
+        if (container) {
+           container.classList.add('hidden');
+        }
+      }
+    </script>
+
+    <script>
+      /**
+       * Encrypt View Functionality
+       * Handles message encryption, character counting, password visibility, and clipboard operations
+       */
+      
+      // DOM Elements - Encrypt Form
+      const messageInput = document.getElementById('messageInput');
+      const passwordInput = document.getElementById('passwordInput');
+      const encryptForm = document.getElementById('encryptForm');
+      const encryptBtn = document.getElementById('encryptBtn');
+      const charCount = document.getElementById('charCount');
+      const togglePasswordBtn = document.getElementById('togglePassword');
+      const eyeIcon = document.getElementById('eyeIcon');
+      
+      // DOM Elements - Output Section
+      const encryptOutput = document.getElementById('encryptOutput');
+      const encryptedText = document.getElementById('encryptedText');
+      const copyEncryptBtn = document.getElementById('copyEncryptBtn');
+      const copyIcon = document.getElementById('copyIcon');
+      const copyText = document.getElementById('copyText');
+      const resetEncryptBtn = document.getElementById('resetEncryptBtn');
+      
+      // Constants
+      const MAX_CHARACTERS = 1000;
+      
+      /**
+       * Update character counter
+       */
+      function updateCharacterCount() {
+        const length = messageInput.value.length;
+        charCount.textContent = `${length} character${length !== 1 ? 's' : ''}`;
+        
+        // Change color if approaching limit
+        if (length > MAX_CHARACTERS * 0.9) {
+          charCount.classList.add('text-red-400');
+          charCount.classList.remove('text-gray-500');
+        } else {
+          charCount.classList.remove('text-red-400');
+          charCount.classList.add('text-gray-500');
+        }
+        
+        // Enforce max length
+        if (length > MAX_CHARACTERS) {
+          messageInput.value = messageInput.value.substring(0, MAX_CHARACTERS);
+          updateCharacterCount();
+        }
+        
+        // Clear error if user is typing
+        if (length > 0) {
+            showInlineError('encryptMessageError', false);
+        }
+      }
+      
+      /**
+       * Handle form submission
+       */
+      function handleEncryptSubmit(e) {
+        e.preventDefault();
+        
+        // Clear previous generic errors
+        clearGeneralError('encryptGeneralError');
+        
+        const message = messageInput.value.trim();
+        const password = passwordInput.value.trim(); // Auto-trim password
+        
+        let hasError = false;
+
+        // Validate inputs
+        if (!message) {
+          showInlineError('encryptMessageError', true);
+          messageInput.focus();
+          hasError = true;
+        }
+        
+        if (!password || password.length < 4) {
+          showInlineError('encryptPasswordError', true);
+          if (!hasError) passwordInput.focus();
+          hasError = true;
+        }
+        
+        if (hasError) return;
+        
+        // Show loading state
+        const originalBtnContent = encryptBtn.innerHTML;
+        encryptBtn.disabled = true;
+        encryptBtn.innerHTML = '<span class="spinner inline-block w-5 h-5 border-2 border-slate-900 border-t-transparent rounded-full"></span> <span>Encrypting...</span>';
+        
+        // Simulate processing delay for better UX
+        setTimeout(() => {
+          try {
+            // Encrypt the message
+            const encrypted = encryptToEmojis(message, password);
+            
+            // Display the result
+            encryptedText.textContent = encrypted;
+            encryptOutput.classList.remove('hidden');
+            encryptOutput.classList.add('fade-in');
+            
+            // Scroll to output
+            encryptOutput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Reset button state
+            encryptBtn.disabled = false;
+            encryptBtn.innerHTML = originalBtnContent;
+            
+          } catch (error) {
+            setGeneralError('encryptGeneralError', 'encryptGeneralErrorText', 'Encryption failed. Please try again.');
+            encryptBtn.disabled = false;
+            encryptBtn.innerHTML = originalBtnContent;
+          }
+        }, 500);
+      }
+      
+
+
+      
+      /**
+       * Reset the form and hide output
+       */
+
+      function resetEncryptForm() {
+        // Clear inputs
+        messageInput.value = '';
+        passwordInput.value = '';
+        passwordInput.type = 'password';
+        eyeIcon.textContent = '👁️';
+        
+        // Clear errors
+        showInlineError('encryptMessageError', false);
+        showInlineError('encryptPasswordError', false);
+        clearGeneralError('encryptGeneralError');
+
+        // Hide output
+        encryptOutput.classList.add('hidden');
+        
+        // Reset character count
+        updateCharacterCount();
+        
+        // Focus on message input
+        messageInput.focus();
+        
+        // Scroll to top of form
+        encryptForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      /**
+       * Event Listeners - Encrypt View
+       */
+      if (messageInput) {
+        messageInput.addEventListener('input', updateCharacterCount);
+      }
+      
+      if (passwordInput) {
+          passwordInput.addEventListener('input', () => {
+             if (passwordInput.value.length >= 4) {
+                 showInlineError('encryptPasswordError', false);
+             }
+          });
+      }
+      
+      if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', () => {
+          uiTogglePassword(passwordInput, eyeIcon);
+        });
+      }
+      
+      if (encryptForm) {
+        encryptForm.addEventListener('submit', handleEncryptSubmit);
+      }
+      
+      if (copyEncryptBtn) {
+        copyEncryptBtn.addEventListener('click', () => {
+          uiCopyToClipboard(
+            encryptedText.textContent, 
+            copyEncryptBtn, 
+            copyIcon, 
+            copyText, 
+            'bg-green-500'
+          );
+        });
+      }
+      
+      if (resetEncryptBtn) {
+        resetEncryptBtn.addEventListener('click', resetEncryptForm);
+      }
+    </script>
+
+    <!-- Decrypt View JavaScript -->
+    <script>
+      /**
+       * Decrypt View Functionality
+       * Handles message decryption, password visibility, and clipboard operations
+       */
+      
+      // DOM Elements - Decrypt Form
+      const emojiInput = document.getElementById('emojiInput');
+      const decryptPasswordInput = document.getElementById('decryptPasswordInput');
+      const decryptForm = document.getElementById('decryptForm');
+      const decryptBtn = document.getElementById('decryptBtn');
+      const toggleDecryptPasswordBtn = document.getElementById('toggleDecryptPassword');
+      const decryptEyeIcon = document.getElementById('decryptEyeIcon');
+      
+      // DOM Elements - Decrypt Output Section
+      const decryptOutput = document.getElementById('decryptOutput');
+      const decryptedText = document.getElementById('decryptedText');
+      const copyDecryptBtn = document.getElementById('copyDecryptBtn');
+      const copyDecryptIcon = document.getElementById('copyDecryptIcon');
+      const copyDecryptText = document.getElementById('copyDecryptText');
+      const resetDecryptBtn = document.getElementById('resetDecryptBtn');
+      
+
+
+      
+      // Core decryption logic has been moved to the shared script block
+
+      
+      /**
+       * Handle decrypt form submission
+       */
+      function handleDecryptSubmit(e) {
+        e.preventDefault();
+        
+        // Clear previous generic errors
+        clearGeneralError('decryptGeneralError');
+        
+        const emojiMessage = emojiInput.value.trim();
+        const password = decryptPasswordInput.value.trim(); // Auto-trim password
+        
+        let hasError = false;
+
+        // Validate inputs
+        if (!emojiMessage) {
+          showInlineError('decryptEmojiError', true);
+          emojiInput.focus();
+          hasError = true;
+        }
+        
+        if (!password || password.length < 4) {
+           showInlineError('decryptPasswordError', true);
+           if (!hasError) decryptPasswordInput.focus();
+           hasError = true;
+        }
+        
+        if (hasError) return;
+        
+        // Show loading state
+        const originalBtnContent = decryptBtn.innerHTML;
+        decryptBtn.disabled = true;
+        decryptBtn.innerHTML = '<span class="spinner inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full"></span> <span>Decrypting...</span>';
+        
+        // Simulate processing delay for better UX
+        setTimeout(() => {
+          try {
+            // Decrypt the message
+            const decrypted = decryptFromEmojis(emojiMessage, password);
+            
+            // Display the result
+            decryptedText.textContent = decrypted;
+            decryptOutput.classList.remove('hidden');
+            decryptOutput.classList.add('fade-in');
+            
+            // Scroll to output
+            decryptOutput.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Reset button state
+            decryptBtn.disabled = false;
+            decryptBtn.innerHTML = originalBtnContent;
+            
+          } catch (error) {
+            setGeneralError('decryptGeneralError', 'decryptGeneralErrorText', 'Decryption failed. Wrong password or invalid message.');
+            decryptBtn.disabled = false;
+            decryptBtn.innerHTML = originalBtnContent;
+          }
+        }, 500);
+      }
+      
+
+
+      
+      /**
+       * Reset the decrypt form and hide output
+       */
+      function resetDecryptForm() {
+        // Clear inputs
+        emojiInput.value = '';
+        decryptPasswordInput.value = '';
+        decryptPasswordInput.type = 'password';
+        decryptEyeIcon.textContent = '👁️';
+        
+        // Clear errors
+        showInlineError('decryptEmojiError', false);
+        showInlineError('decryptPasswordError', false);
+        clearGeneralError('decryptGeneralError');
+
+        // Hide output
+        decryptOutput.classList.add('hidden');
+        
+        // Focus on emoji input
+        emojiInput.focus();
+        
+        // Scroll to top of form
+        decryptForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      
+      /**
+       * Event Listeners - Decrypt View
+       */
+       if (emojiInput) {
+          emojiInput.addEventListener('input', () => {
+              if (emojiInput.value.trim().length > 0) {
+                  showInlineError('decryptEmojiError', false);
+              }
+          });
+      }
+      
+      if (decryptPasswordInput) {
+          decryptPasswordInput.addEventListener('input', () => {
+              if (decryptPasswordInput.value.length >= 4) {
+                  showInlineError('decryptPasswordError', false);
+              }
+          });
+      }
+
+      if (toggleDecryptPasswordBtn) {
+        toggleDecryptPasswordBtn.addEventListener('click', () => {
+          uiTogglePassword(decryptPasswordInput, decryptEyeIcon);
+        });
+      }
+      
+      if (decryptForm) {
+        decryptForm.addEventListener('submit', handleDecryptSubmit);
+      }
+      
+      if (copyDecryptBtn) {
+        copyDecryptBtn.addEventListener('click', () => {
+          uiCopyToClipboard(
+            decryptedText.textContent,
+            copyDecryptBtn,
+            copyDecryptIcon,
+            copyDecryptText,
+            'bg-purple-700'
+          );
+        });
+      }
+      
+      if (resetDecryptBtn) {
+        resetDecryptBtn.addEventListener('click', resetDecryptForm);
+      }
+    </script>
+  </body>
+</html>
