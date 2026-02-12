@@ -729,29 +729,29 @@
        * Each emoji maps directly to a Base64 character.
        */
       const EMOJI_MAP = [
-        // Smileys & Emotion (20 emojis) - Indices 0-19
-        '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃',
-        '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙',
-        
-        // Expressive Faces (15 emojis) - Indices 20-34
-        '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔',
-        '🤐', '🤨', '😐', '😑', '😶',
-        
-        // Negative Emotions (10 emojis) - Indices 35-44
-        '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴',
-        
-        // Hearts & Symbols (10 emojis) - Indices 45-54
-        '💖', '🧡', '💛', '💚', '💙', '💜', '🤎', '🖤', '🤍', '💯',
-        
-        // Hand Gestures (10 emojis) - Indices 55-64
-        '👋', '🖐', '✋', '👌', '🤘', '🤞', '🤟', '👍', '👎', '👊'
+        // 0-31: Faces (Smileys)
+        '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇', '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '😋', '😛', '😜', '🤪', '😝', '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨',
+        // 32-63: Faces Part 2 (Neutral/Skeptical)
+        '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥', '😌', '😔', '😪', '🤤', '😴', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '🥵', '🥶', '🥴', '😵', '🤯', '🤠', '🥳', '😎', '🤓', '🧐', '😕', '😟', '🙁',
+        // 64-95: Faces Part 3 (Negative/Concerned)
+        '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😰', '😥', '😢', '😭', '😱', '😖', '😣', '😞', '😓', '😩', '😫', '🥱', '😤', '😡', '😠', '🤬', '😈', '👿', '💀', '☠️', '💩', '🤡', '👹', '👺',
+        // 96-127: Gestures & Hands
+        '👻', '👽', '👾', '🤖', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '😿', '😾', '🙈', '🙉', '🙊', '💋', '💌', '💘', '💝', '💖', '💗', '💓', '💞', '💕', '💟', '❣️', '💔', '❤️', '🧡', '💛', '💚',
+        // 128-159: Hands Part 2
+        '💙', '💜', '🤎', '🖤', '🤍', '💯', '💢', '💥', '💫', '💦', '💨', '🕳️', '💣', '💬', '👁️‍🗨️', '🗨️', '🗯️', '💭', '💤', '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈',
+        // 160-191: General Objects & Animals
+        '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦵', '🦿', '🦶', '👂', '🦻', '👃', '🧠', '🦷', '🦴', '👀',
+        // 192-223: Animals & Nature
+        '👁️', '👅', '👄', '👶', '🧒', '👦', '👧', '🧑', '👱', '👨', '🧔', '👩', '🧓', '👵', '👴', '👲', '👳', '🧕', '👮', '👷', '💂', '🕵️', '👩‍⚕️', '👨‍⚕️', '👩‍🌾', '👨‍🌾', '👩‍🍳', '👨‍🍳', '👩‍🎓', '👨‍🎓', '👩‍🎤', '👨‍🎤',
+        // 224-255: Nature & Symbols
+        '👩‍🏫', '👨‍🏫', '👩‍🏭', '👨‍🏭', '👩‍💻', '👨‍💻', '👩‍💼', '👨‍💼', '👩‍🔧', '👨‍🔧', '👩‍🔬', '👨‍🔬', '👩‍🎨', '👨‍🎨', '👩‍🚒', '👨‍🚒', '👩‍✈️', '👨‍✈️', '👩‍🚀', '👨‍🚀', '👩‍⚖️', '👨‍⚖️', '👰', '🤵', '👸', '🤴', '🧚', '🧞', '🧜', '🧟', '🧙', '🧛'
       ];
       
       const BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
       
-      // Verify emoji map has exactly 65 emojis
-      if (EMOJI_MAP.length !== 65) {
-        console.error(`EMOJI_MAP should have 65 emojis, but has ${EMOJI_MAP.length}`);
+      // Verify emoji map has exactly 256 emojis
+      if (EMOJI_MAP.length !== 256) {
+        console.error(`EMOJI_MAP should have 256 emojis, but has ${EMOJI_MAP.length}`);
       }
 
       // Pre-compute reverse map for O(1) decryption lookup
@@ -761,65 +761,59 @@
       });
 
       /**
-       * Convert Base64 text to emoji encoding
-       * Step 10: Helper Function
+       * Convert bytes (WordArray) to emoji encoding (Base256)
        */
-      function base64ToEmojis(base64String) {
-        if (!base64String || base64String.length === 0) return '';
+      function bytesToEmojis(wordArray) {
+        const words = wordArray.words;
+        const sigBytes = wordArray.sigBytes;
         let result = '';
-        for (let i = 0; i < base64String.length; i++) {
-          const char = base64String[i];
-          const index = BASE64_CHARS.indexOf(char);
-          if (index !== -1) {
-            result += EMOJI_MAP[index];
-          } else {
-            console.warn('Non-Base64 character found:', char);
-            result += char;
-          }
+        for (let i = 0; i < sigBytes; i++) {
+          const byte = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+          result += EMOJI_MAP[byte] || '?';
         }
         return result;
       }
 
       /**
-       * Convert emoji encoding back to Base64 text
-       * Step 10: Helper Function
+       * Convert emoji encoding back to bytes (WordArray)
        */
-      function emojisToBase64(emojiString) {
-        if (!emojiString || emojiString.length === 0) return '';
+      function emojisToBytes(emojiString) {
+        if (!emojiString || emojiString.length === 0) return CryptoJS.lib.WordArray.create();
         
-        let result = '';
         let emojis;
-        
-        // Use Intl.Segmenter for robust grapheme cluster splitting (handling multi-codepoint emojis)
         if (typeof Intl !== 'undefined' && Intl.Segmenter) {
             const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
             emojis = Array.from(segmenter.segment(emojiString)).map(segment => segment.segment);
         } else {
-            // Fallback for older browsers (might fail on sophisticated emojis)
             emojis = Array.from(emojiString);
         }
         
+        const bytes = [];
         for (const emoji of emojis) {
-          // Skip whitespace/newlines that might come from copy-pasting
           if (!emoji.trim()) continue;
-          
           const index = EMOJI_TO_INDEX.get(emoji);
-          if (index !== undefined && index < BASE64_CHARS.length) {
-            result += BASE64_CHARS[index];
+          if (index !== undefined) {
+            bytes.push(index);
           }
         }
-        return result;
+        
+        // Convert byte array to WordArray
+        const words = [];
+        for (let i = 0; i < bytes.length; i++) {
+          words[i >>> 2] |= bytes[i] << (24 - (i % 4) * 8);
+        }
+        return CryptoJS.lib.WordArray.create(words, bytes.length);
       }
 
       /**
        * Encrypt the message using AES-256 with PBKDF2, Salt, and IV
-       * Step 8: Encryption Logic
+       * Reduced metadata overhead (8-byte Salt/IV) and Base256 encoding
        */
       function encryptToEmojis(message, password) {
         try {
-          // 1. Generate random Salt (128-bit) and IV (128-bit)
-          const salt = CryptoJS.lib.WordArray.random(128/8);
-          const iv = CryptoJS.lib.WordArray.random(128/8);
+          // 1. Generate random Salt (64-bit) and IV (64-bit) for reduced overhead
+          const salt = CryptoJS.lib.WordArray.random(64/8);
+          const iv = CryptoJS.lib.WordArray.random(64/8);
 
           // 2. Derive key from password + salt using PBKDF2
           const key = CryptoJS.PBKDF2(password, salt, {
@@ -834,13 +828,11 @@
             mode: CryptoJS.mode.CBC
           });
 
-          // 4. Combine: salt + iv + ciphertext -> single Base64 string
-          // We need to carefully concat the WordArrays
+          // 4. Combine: salt (8 bytes) + iv (8 bytes) + ciphertext -> binary
           const combined = salt.clone().concat(iv).concat(encrypted.ciphertext);
-          const base64 = CryptoJS.enc.Base64.stringify(combined);
 
-          // 5. Replace each Base64 char with its emoji
-          return base64ToEmojis(base64);
+          // 5. Direct binary to emoji mapping (Base256)
+          return bytesToEmojis(combined);
         } catch (error) {
           console.error('Encryption error:', error);
           throw new Error('Failed to encrypt message');
@@ -849,29 +841,26 @@
 
       /**
        * Decrypt the emoji message using AES-256 with PBKDF2, Salt, and IV
-       * Step 9: Decryption Logic
+       * Expects 8-byte Salt/IV and Base256 encoding
        */
       function decryptFromEmojis(emojiString, password) {
         try {
-          // 1. Convert emojis back to Base64
-          const base64 = emojisToBase64(emojiString);
+          // 1. Convert emojis back to binary (WordArray)
+          const combined = emojisToBytes(emojiString);
 
-          // 2. Parse combined binary
-          const combined = CryptoJS.enc.Base64.parse(base64);
+          // 2. Extract salt (first 8 bytes), IV (next 8 bytes), ciphertext (rest)
+          // 8 bytes = 2 words (4 bytes each)
+          const salt = CryptoJS.lib.WordArray.create(combined.words.slice(0, 2));
+          const iv = CryptoJS.lib.WordArray.create(combined.words.slice(2, 4));
+          const ciphertext = CryptoJS.lib.WordArray.create(combined.words.slice(4), combined.sigBytes - 16);
 
-          // 3. Extract salt (first 16 bytes), IV (next 16 bytes), ciphertext (rest)
-          // WordArray stores words (4 bytes). 16 bytes = 4 words.
-          const salt = CryptoJS.lib.WordArray.create(combined.words.slice(0, 4));
-          const iv = CryptoJS.lib.WordArray.create(combined.words.slice(4, 8));
-          const ciphertext = CryptoJS.lib.WordArray.create(combined.words.slice(8));
-
-          // 4. Derive same key from password + extracted salt
+          // 3. Derive same key from password + extracted salt
           const key = CryptoJS.PBKDF2(password, salt, {
             keySize: 256 / 32,
             iterations: 10000,
           });
 
-          // 5. Decrypt
+          // 4. Decrypt
           const decrypted = CryptoJS.AES.decrypt(
             { ciphertext: ciphertext }, 
             key, 
@@ -882,7 +871,7 @@
             }
           );
 
-          // 6. Return UTF-8 string or throw error
+          // 5. Return UTF-8 string or throw error
           const result = decrypted.toString(CryptoJS.enc.Utf8);
           if (!result) throw new Error("Decryption Failed");
           return result;
