@@ -24,7 +24,7 @@
     />
     <meta
       name="keywords"
-      content="emoji encryption, encryption, message encryption, encrypt message, encrypt emoji, message encrypt, text to emoji,text to emoji converter, converter, convert text to emoji, AES-256, private messaging,emoji spy,"
+      content="emoji encryption,emoji encryption made by muhammad abdullah,emoji spy made by muhammad abdullah, encryption, message encryption, encrypt message, encrypt emoji, message encrypt, text to emoji,text to emoji converter, converter, convert text to emoji, AES-256, private messaging,emoji spy,"
     />
 
     <!-- Open Graph Tags for Social Sharing -->
@@ -765,13 +765,22 @@
         tabButtons.forEach(button => {
           const isActive = button.dataset.tab === tabName;
           
+          // Remove all possible active and inactive classes first to reset state
+          button.classList.remove(
+            'bg-accent-green', 'text-slate-900', 'neon-glow-green',
+            'bg-accent-purple', 'text-white', 'neon-glow-purple',
+            'bg-transparent', 'text-gray-400', 'hover:bg-slate-700'
+          );
+          
           if (isActive) {
             // Active tab styling
-            button.classList.add('bg-accent-green', 'text-slate-900', 'neon-glow-green');
-            button.classList.remove('bg-transparent', 'text-gray-400', 'hover:bg-slate-700');
+            if (tabName === 'encrypt') {
+              button.classList.add('bg-accent-green', 'text-slate-900', 'neon-glow-green');
+            } else {
+              button.classList.add('bg-accent-purple', 'text-white', 'neon-glow-purple');
+            }
           } else {
             // Inactive tab styling
-            button.classList.remove('bg-accent-green', 'text-slate-900', 'neon-glow-green');
             button.classList.add('bg-transparent', 'text-gray-400', 'hover:bg-slate-700');
           }
         });
